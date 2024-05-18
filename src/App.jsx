@@ -64,7 +64,7 @@ export default function Board() {
 
   let status;
   if (winnerSign) {
-    status = `Player ${winnerSign} has won!`;
+    status = `${winnerSign} wins!`;
   } else if (click.current == 9) {
     status = "Tie!";
   } else {
