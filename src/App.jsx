@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import "./App.css";
 
@@ -13,6 +13,7 @@ function Square({ value, onSquareClick, position }) {
 export default function Board() {
   let [squares, setSquares] = useState(Array(9).fill(null));
   let [player, setPlayer] = useState(0);
+  let click = useRef(0);
 
   const handleSquareClick = (index) => {
     if (squares[index] || calculateWinner(squares)) return;
@@ -23,6 +24,8 @@ export default function Board() {
     setSquares(nextSquares);
 
     changePlayer();
+
+    click.current += 1;
   };
 
   const changePlayer = () => {
@@ -41,7 +44,7 @@ export default function Board() {
       [2, 4, 6],
     ];
 
-    // Checks if there are any winning line is 'owned' by a single player
+    // Checks if any winning line is 'owned' by a single player
     // returns "X" or "O" if there's a winner, null otherwise
     for (let i = 0; i < winnerLines.length; ++i) {
       const [a, b, c] = winnerLines[i];
@@ -62,6 +65,8 @@ export default function Board() {
   let status;
   if (winnerSign) {
     status = `Player ${winnerSign} has won!`;
+  } else if (click.current == 9) {
+    status = "Tie!";
   } else {
     status = `Turn: ${player === 0 ? "X" : "O"}`;
   }
@@ -71,6 +76,7 @@ export default function Board() {
     setPlayer(Math.floor(Math.random() * 100) % 2 === 0 ? 0 : 1);
 
     winnerSign = "";
+    click.current = 0;
     status = "";
   };
 
